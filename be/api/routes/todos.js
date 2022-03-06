@@ -39,7 +39,7 @@ router.post("/", (req, res, next) => {
       const limit=parseInt(req.query.limit) || 5;
       let query={}
       Todo.find(query)
-      .sort({createdTodo:-1})
+      .sort({dateCreated:-1})
       .skip(page*limit)
       .limit(limit)
       .then((docs) => {
