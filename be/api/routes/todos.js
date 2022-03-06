@@ -35,7 +35,13 @@ router.post("/", (req, res, next) => {
   });
 
   router.get("/", (req, res, next) => {
-    Todo.find()
+      const page = parseInt(req.query.page) || 0;
+      const limit=parseInt(req.query.limit) || 5;
+      let query={}
+      Todo.find(query)
+      .sort({createdTodo:-1})
+      .skip(page*limit)
+      .limit(limit)
       .then((docs) => {
         console.log(docs);
         res.status(200).json(docs);
