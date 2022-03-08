@@ -10,22 +10,45 @@ import Paper from "@mui/material/Paper";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import Pagination from "@mui/material/Pagination";
+import EditTodo from "./EditTodo";
 
 export default function TodoList() {
   const [page, setPage] = useState(0);
   const [data, setData] = useState([]);
-  const [btnDisabled, setBtnDisabled] = useState(false)
-  const handleDelete = (value) => {
-    let id=value;
-    console.log(id)
-    // axios.delete(`http://localhost:3001/todos/${id}`,).then((response) => {
-    //   console.log(response);
-    //});
+  const onClickEdit = (value) => {
+    let id = value;
+    window.open(`/editTodo/${id}`, '_blank')
+  };
+  const onClickDelete = (value) => {
+    let id = value;
+    axios.delete(`http://localhost:3001/todos/${id}`).then((response) => {
+      console.log(response);
+    });
+    window.setTimeout(function () {
+      window.location.reload();
+    }, 1000);
+  };
+  const onClickDone = (value) => {
+    let id = value;
+    //console.log(value);
+    let data = [
+      {
+        propName: "isActive",
+        value: true,
+      },
+    ];
+    axios.patch(`http://localhost:3001/todos/${id}`, data).then((response) => {
+      console.log(response);
+    });
+    window.setTimeout(function () {
+      window.location.reload();
+    }, 1000);
   };
 
   const loadPosts = async () => {
     const res = await axios.get(`http://localhost:3001/todos?page=${page}`);
     setData(res.data);
+    console.log(data);
   };
   useEffect(() => {
     loadPosts();
@@ -44,7 +67,7 @@ export default function TodoList() {
       style={{ minHeight: "100vh" }}
     >
       <Grid item xs={3}>
-        <Card sx={{ maxWidth: 950 }}>
+        <Card sx={{ maxWidth: 1000 }}>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 350 }} aria-label="simple table">
               <TableBody>
@@ -53,7 +76,7 @@ export default function TodoList() {
                     key={x._id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell component="th" scope="datas">
+                    <TableCell component="th" scope="x">
                       {x.id}
                     </TableCell>
                     <TableCell align="right">{x.title}</TableCell>
@@ -62,31 +85,30 @@ export default function TodoList() {
                     <TableCell align="right">{x.dateCreated}</TableCell>
                     <TableCell align="right">
                       <Button
-                        className="button_style"
                         variant="outlined"
                         color="primary"
                         size="small"
+                        onClick={() => onClickEdit(x._id)}
                       >
                         Edit
                       </Button>
                     </TableCell>
                     <TableCell align="right">
                       <Button
-                        className="button_style"
                         variant="outlined"
                         color="secondary"
                         size="small"
-                        disabled={btnDisabled}
+                        disabled={x.isActive}
+                        onClick={() => onClickDone(x._id)}
                       >
                         Done
                       </Button>
                     </TableCell>
                     <TableCell align="right">
                       <Button
-                        className="button_style"
                         variant="outlined"
                         size="small"
-                        onClick={handleDelete(x._id)}
+                        onClick={() => onClickDelete(x._id)}
                       >
                         Delete
                       </Button>

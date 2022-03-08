@@ -5,6 +5,7 @@ import axios from "axios";
 import { styled, alpha } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import TodoList from "./TodoList";
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -88,6 +89,9 @@ export default function TodoForm() {
     axios.post("http://localhost:3001/todos", data).then((response) => {
       console.log(response);
     });
+    window.setTimeout( function() {
+      window.location.reload();
+    }, 1000);
   };
 
 
@@ -148,6 +152,7 @@ export default function TodoForm() {
           Add
         </Button>
       </form>
+      <TodoList/>
     </div>
   );
 }
