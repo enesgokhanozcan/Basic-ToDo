@@ -1,4 +1,4 @@
-# Simple To-do
+# Basic To-do
 A simple to-do application using React and Node.js.
 
 **Technologies used;**
